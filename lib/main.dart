@@ -10,8 +10,26 @@ void main() {
 
 var textStyle = TextStyle(color: Colors.orangeAccent);
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+
+
+class _MyAppState extends State<MyApp> {
+  var tab = 0;
+  var tabList = [Text('홈페이지'), Text('샾페이지')];
+
+
+  clickTab(value){
+    setState(() {
+      tab = value;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -20,18 +38,25 @@ class MyApp extends StatelessWidget {
         title: Text('instagram'),
         actions: [Icon(Icons.add_box_outlined, size: 30,)],
       ),
-        body: Theme( // Theme로 감싸기
-          data: ThemeData(
-            backgroundColor: Colors.orangeAccent
-          ),
-          child: Container(
-              child: TextButton(onPressed: (){},
-                child: Text('dksusd', style: Theme.of(context).textTheme.bodyText2),)
-          )
+        // body: [Text('홈페이지'), Text('샾페이지')][tab],
+        body: PageView.builder(
+         controller: PageController(initialPage: 0),
+          itemCount: 2,
+          itemBuilder : (context, idx){
+           return tabList[idx];
+          },
         ),
-      bottomNavigationBar:Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [Icon(Icons.home_outlined), Icon(Icons.shopping_bag_outlined)]),
-      );
+      bottomNavigationBar:BottomNavigationBar(
+        onTap: (value){
+          print(value);
+          clickTab(value);
+        },
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: '홈'),
+          BottomNavigationBarItem(icon: Icon(Icons.shopping_bag_outlined), label: 'ghs')
+        ],)
+    );
     }
 }
