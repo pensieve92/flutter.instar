@@ -3,18 +3,21 @@ import 'style/style.dart' as styleTheme;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/rendering.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+
 
 
 void main() {
   runApp(MaterialApp(
 
     theme: styleTheme.theme,
-      // home: MyApp(),
-    initialRoute: '/',
-    routes: {
-      '/': (c) => Upload(),
-      '/detail': (c) => Text('상세페이지')
-    },
+      home: MyApp(),
+    // initialRoute: '/',
+    // routes: {
+    //   '/': (c) => Upload(),
+    //   '/detail': (c) => Text('상세페이지')
+    // },
 
   ));
 }
@@ -31,6 +34,8 @@ class _MyAppState extends State<MyApp> {
   var tab = 0;
   var dataList = [];
   var tabList = [];
+  var userImage;
+
 
   clickTab(value){
     setState(() {
@@ -85,10 +90,21 @@ class _MyAppState extends State<MyApp> {
         title: Text('instagram'),
         actions: [IconButton(
             icon: Icon(Icons.add_box_outlined, size: 30,),
-        onPressed: (){
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => Upload())          );
-                },
+        onPressed: () async {
+
+            var picker = ImagePicker();
+            var image = await picker.pickImage(source: ImageSource.gallery);
+            // var image = await picker.pickMultiImage();
+
+            if(image != null){
+              setState(() {
+                userImage = File(image.path);
+              });
+            }
+
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Upload(userImage: userImage)) );
+
+        },
       )],
     ),
         // body: [Text('홈페이지'), Text('샾페이지')][tab],
@@ -115,7 +131,8 @@ class _MyAppState extends State<MyApp> {
 }
 
 class Upload extends StatelessWidget {
-  const Upload({Key? key}) : super(key: key);
+  const Upload({Key? key, this.userImage}) : super(key: key);
+  final userImage;
   @override
 
   Widget build(BuildContext context) {
@@ -124,6 +141,8 @@ class Upload extends StatelessWidget {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Image.file(userImage),
+            TextField(),
             Text('이미지업로드화면'),
             IconButton(
                 onPressed: (){
