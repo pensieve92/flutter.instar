@@ -7,8 +7,15 @@ import 'package:flutter/rendering.dart';
 
 void main() {
   runApp(MaterialApp(
+
     theme: styleTheme.theme,
-      home: MyApp()
+      // home: MyApp(),
+    initialRoute: '/',
+    routes: {
+      '/': (c) => Upload(),
+      '/detail': (c) => Text('상세페이지')
+    },
+
   ));
 }
 
@@ -76,8 +83,14 @@ class _MyAppState extends State<MyApp> {
     return Scaffold(
       appBar: AppBar(
         title: Text('instagram'),
-        actions: [Icon(Icons.add_box_outlined, size: 30,)],
-      ),
+        actions: [IconButton(
+            icon: Icon(Icons.add_box_outlined, size: 30,),
+        onPressed: (){
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => Upload())          );
+                },
+      )],
+    ),
         // body: [Text('홈페이지'), Text('샾페이지')][tab],
         body: PageView.builder(
          controller: PageController(initialPage: 0),
@@ -99,4 +112,30 @@ class _MyAppState extends State<MyApp> {
         ],)
     );
     }
+}
+
+class Upload extends StatelessWidget {
+  const Upload({Key? key}) : super(key: key);
+  @override
+
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('이미지업로드화면'),
+            IconButton(
+                onPressed: (){
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, "/detail");
+
+                },
+                icon: Icon(Icons.close)
+            ),
+          ],
+        )
+    );
+
+  }
 }
