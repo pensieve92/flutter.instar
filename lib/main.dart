@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'style/style.dart' as styleTheme;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter/rendering.dart';
 
 
 void main() {
@@ -19,9 +20,6 @@ class MyApp extends StatefulWidget {
   @override
   State<MyApp> createState() => _MyAppState();
 }
-
-
-
 class _MyAppState extends State<MyApp> {
   var tab = 0;
   var dataList = [];
@@ -51,10 +49,26 @@ class _MyAppState extends State<MyApp> {
 
   }
 
+
+  var scroll = ScrollController();
+
   @override
   void initState() {
     super.initState();
     getData();
+
+    // 리스너 등록
+    scroll.addListener(() {
+      print(scroll.position.pixels);
+      // 현재스크롤 === 최대 스크롤
+      if(scroll.position.pixels == scroll.position.maxScrollExtent){
+        print('같음');
+        var result = http.get(Uri.parse('https://codingapple1.github.io/app/more1.json'));
+      }
+
+
+    });
+
   }
 
   @override
