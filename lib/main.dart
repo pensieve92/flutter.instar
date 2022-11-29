@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'style/style.dart' as styleTheme;
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 
 void main() {
   runApp(MaterialApp(
@@ -21,8 +24,8 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   var tab = 0;
-  var tabList = [Text('홈페이지'), Text('샾페이지')];
-
+  var dataList = [];
+  var tabList = [];
 
   clickTab(value){
     setState(() {
@@ -30,6 +33,29 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  getData() async{
+    var result = await http.get(Uri.parse('https://codingapple1.github.io/app/data.json'));
+     // TODO Dio 패키지 사용해보기
+    
+    print(jsonDecode(result.body));
+    setState(() {
+      dataList = jsonDecode(result.body);
+      tabList.add(
+          ListView.builder(
+            itemCount: dataList.length,
+            itemBuilder: (context, idx){
+              return Text(dataList[idx]['content'].toString() ?? 'test');
+            },)
+      );
+    });
+
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
 
   @override
   Widget build(BuildContext context) {
