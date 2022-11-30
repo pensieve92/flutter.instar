@@ -6,7 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:flutter/cupertino.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -164,7 +164,27 @@ class Upload extends StatelessWidget {
           children: [
             Image.file(userImage),
             TextField(),
-            Text('이미지업로드화면'),
+            // TODO Hero 위젯도 나중에 해보기
+            GestureDetector(
+              child: Text('이미지업로드화면'),
+              onTap: (){
+                  Navigator.push(context,
+                      // MaterialPageRoute(builder: (c) => Profile())
+                      // CupertinoPageRoute(builder: (c) => Profile() // 오 > 왼 슬라이드
+                        PageRouteBuilder(pageBuilder: (c, a1, a2) => Profile(),
+                          transitionsBuilder: (c, a1, a2, child) =>
+                          // c : context, a1: animation object (0~1) 새페이지, a2:animation object 기존페애ㅣ지, child: Profile()
+                          //     FadeTransition(opacity: a1, child: child) // FadeTransition, PositionTransition...
+                          SlideTransition(position: Tween(
+                            begin: Offset(1.0, 0.0),
+                            end: Offset(1.0, 0.0),
+                          ).animate(a1),
+                          child: child,)
+                      )
+                );
+              },
+            ),
+
             IconButton(
                 onPressed: (){
                   Navigator.pop(context);
@@ -176,6 +196,18 @@ class Upload extends StatelessWidget {
           ],
         )
     );
-
   }
 }
+
+class Profile extends StatelessWidget {
+  const Profile({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: Text('프로필페이지')
+    );
+  }
+}
+
