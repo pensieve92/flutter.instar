@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'package:flutter/rendering.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 void main() {
@@ -35,6 +35,26 @@ class _MyAppState extends State<MyApp> {
   var dataList = [];
   var tabList = [];
   var userImage;
+
+  saveData() async {
+    var storage = await SharedPreferences.getInstance();
+    storage.setString('name', 'jeon');
+    var result = storage.getString('name');
+    print(result);
+    storage.remove('name');
+    var result2 = storage.getString('name');
+    print(result2);
+
+    var map = {'age': 20};
+    storage.setString('name1', jsonEncode(map));
+    var mapResult = storage.getString('name1') ?? '없어여';
+    print(mapResult);
+    var decodeMap = jsonDecode(mapResult);
+    print(decodeMap['age']);
+
+  }
+
+
 
 
   clickTab(value){
@@ -68,6 +88,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     getData();
+    saveData();
 
     // 리스너 등록
     scroll.addListener(() {
